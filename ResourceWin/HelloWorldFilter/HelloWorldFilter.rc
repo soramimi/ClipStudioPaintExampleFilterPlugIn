@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 日本語 (日本) resources
+// Japanese resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
@@ -68,12 +68,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "CompanyName", "@soramimi_jp"
-            VALUE "FileDescription", "MyFilter"
+            VALUE "FileDescription", "HelloWorld"
             VALUE "FileVersion", "1.0.0"
-            VALUE "InternalName", "MyFilter"
-            VALUE "LegalCopyright", "(C) S.Fuchita"
-            VALUE "OriginalFilename", "MyFilter.dll"
-            VALUE "ProductName", "MyFilter"
+            VALUE "InternalName", "HelloWorld"
+            VALUE "LegalCopyright", "(C) @soramimi_jp"
+            VALUE "OriginalFilename", "HelloWorld.dll"
+            VALUE "ProductName", "HelloWorld"
             VALUE "ProductVersion", "1.0.0"
         END
     END
@@ -91,11 +91,11 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_STRING101           "サンプルSTRING101"
-    IDS_STRING102           "サンプルSTRING102"
+    IDS_STRING101           "Totorial"
+    IDS_STRING102           "HelloWorld"
 END
 
-#endif    // 日本語 (日本) resources
+#endif    // Japanese resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -1,80 +1,82 @@
-//! TriglavPlugIn
+//! Hello World Filter Plugin for CLIP STUDIO EX
 //! Copyright (C) @soramimi_jp
 
 #include "TriglavPlugInSDK/TriglavPlugInSDK.h"
 #include <vector>
 
-static	const int kStringIDFilterCategoryName		= 101;
-static	const int kStringIDFilterName				= 102;
-static	const int kStringIDItemCaptionHue			= 103;
-static	const int kStringIDItemCaptionSaturation	= 104;
-static	const int kStringIDItemCaptionValue			= 105;
+static const int kStringIDFilterCategoryName		= 101;
+static const int kStringIDFilterName				= 102;
 
-struct	MyFilterInfo {
+struct HelloWorldFilterInfo {
 	TriglavPlugInPropertyService *pPropertyService;
 };
 
-
-//	プラグインメイン
+// plugin main
 void TRIGLAV_PLUGIN_API TriglavPluginCall(TriglavPlugInInt *result, TriglavPlugInPtr *data, TriglavPlugInInt selector, TriglavPlugInServer *pluginServer, TriglavPlugInPtr reserved)
 {
 	*result	= kTriglavPlugInCallResultFailed;
 	if (pluginServer) {
 		if (selector == kTriglavPlugInSelectorModuleInitialize) {
-			//	プラグインの初期化
+			// initialize plugin
 			TriglavPlugInModuleInitializeRecord *pModuleInitializeRecord = pluginServer->recordSuite.moduleInitializeRecord;
 			TriglavPlugInStringService *pStringService = pluginServer->serviceSuite.stringService;
 			if (pModuleInitializeRecord && pStringService) {
-				TriglavPlugInInt	hostVersion;
-				pModuleInitializeRecord->getHostVersionProc(&hostVersion,pluginServer->hostObject);
+				TriglavPlugInInt hostVersion;
+				pModuleInitializeRecord->getHostVersionProc(&hostVersion, pluginServer->hostObject);
 				if (hostVersion >= kTriglavPlugInNeedHostVersion) {
 					TriglavPlugInStringObject moduleID = nullptr;
-					const char *moduleIDString	= "78B78B66-F64A-4B5D-9804-8A11B7ED48AE";
-					pStringService->createWithAsciiStringProc(&moduleID,moduleIDString,static_cast<TriglavPlugInInt>(::strlen(moduleIDString)));
-					(*pModuleInitializeRecord).setModuleIDProc(pluginServer->hostObject,moduleID);
-					(*pModuleInitializeRecord).setModuleKindProc(pluginServer->hostObject,kTriglavPlugInModuleSwitchKindFilter);
+					const char *moduleIDString = "78B78B66-F64A-4B5D-9804-8A11B7ED48AE";
+					pStringService->createWithAsciiStringProc(&moduleID, moduleIDString, static_cast<TriglavPlugInInt>(::strlen(moduleIDString)));
+					(*pModuleInitializeRecord).setModuleIDProc(pluginServer->hostObject, moduleID);
+					(*pModuleInitializeRecord).setModuleKindProc(pluginServer->hostObject, kTriglavPlugInModuleSwitchKindFilter);
 					pStringService->releaseProc(moduleID);
 
-					MyFilterInfo *pFilterInfo = new MyFilterInfo;
+					HelloWorldFilterInfo *pFilterInfo = new HelloWorldFilterInfo;
 					*data = pFilterInfo;
 					*result	= kTriglavPlugInCallResultSuccess;
 				}
 			}
 		} else if (selector == kTriglavPlugInSelectorModuleTerminate) {
-			//	プラグインの終了処理
-			MyFilterInfo *pFilterInfo = static_cast<MyFilterInfo *>(*data);
+			// terminate plugin
+			HelloWorldFilterInfo *pFilterInfo = static_cast<HelloWorldFilterInfo *>(*data);
 			delete pFilterInfo;
 			*data = nullptr;
 			*result = kTriglavPlugInCallResultSuccess;
 		} else if(selector == kTriglavPlugInSelectorFilterInitialize) {
-			//	フィルタの初期化
+			// initialize filter
 			TriglavPlugInRecordSuite *pRecordSuite = &pluginServer->recordSuite;
 			TriglavPlugInHostObject hostObject = pluginServer->hostObject;
 			TriglavPlugInStringService *pStringService = pluginServer->serviceSuite.stringService;
 			TriglavPlugInPropertyService *pPropertyService = pluginServer->serviceSuite.propertyService;
 			if (TriglavPlugInGetFilterInitializeRecord(pRecordSuite) && pStringService && pPropertyService) {
-				//	フィルタカテゴリ名とフィルタ名の設定
+				// set filter category and name
 				TriglavPlugInStringObject filterCategoryName = nullptr;
 				TriglavPlugInStringObject filterName = nullptr;
-				pStringService->createWithStringIDProc(&filterCategoryName,kStringIDFilterCategoryName,pluginServer->hostObject);
-				pStringService->createWithStringIDProc(&filterName,kStringIDFilterName,pluginServer->hostObject);
+				pStringService->createWithStringIDProc(&filterCategoryName, kStringIDFilterCategoryName, pluginServer->hostObject);
+				pStringService->createWithStringIDProc(&filterName, kStringIDFilterName, pluginServer->hostObject);
 				
-				TriglavPlugInFilterInitializeSetFilterCategoryName(pRecordSuite,hostObject,filterCategoryName,'c');
-				TriglavPlugInFilterInitializeSetFilterName(pRecordSuite,hostObject,filterName,'h');
+				// access keys
+				TriglavPlugInFilterInitializeSetFilterCategoryName(pRecordSuite, hostObject, filterCategoryName, 'c');
+				TriglavPlugInFilterInitializeSetFilterName(pRecordSuite, hostObject, filterName, 'h');
+
 				pStringService->releaseProc(filterCategoryName);
 				pStringService->releaseProc(filterName);
 
-				//	ターゲット
-				TriglavPlugInInt	target[]={kTriglavPlugInFilterTargetKindRasterLayerGrayAlpha, kTriglavPlugInFilterTargetKindRasterLayerRGBAlpha, kTriglavPlugInFilterTargetKindRasterLayerAlpha};
-				TriglavPlugInFilterInitializeSetTargetKinds(pRecordSuite,hostObject, target, 3);
+				// target
+				TriglavPlugInInt target[]={
+					kTriglavPlugInFilterTargetKindRasterLayerGrayAlpha,
+					kTriglavPlugInFilterTargetKindRasterLayerRGBAlpha,
+					kTriglavPlugInFilterTargetKindRasterLayerAlpha
+				};
+				TriglavPlugInFilterInitializeSetTargetKinds(pRecordSuite, hostObject, target, 3);
 
 				*result	= kTriglavPlugInCallResultSuccess;
 			}
 		} else if (selector == kTriglavPlugInSelectorFilterTerminate) {
-			//	フィルタの終了処理
+			// terminate filter
 			*result	= kTriglavPlugInCallResultSuccess;
 		} else if (selector == kTriglavPlugInSelectorFilterRun) {
-			//	フィルタの実行
+			// run filter
 			TriglavPlugInRecordSuite *pRecordSuite = &pluginServer->recordSuite;
 			TriglavPlugInOffscreenService *pOffscreenService = pluginServer->serviceSuite.offscreenService;
 			TriglavPlugInPropertyService *pPropertyService = pluginServer->serviceSuite.propertyService;
@@ -100,7 +102,7 @@ void TRIGLAV_PLUGIN_API TriglavPluginCall(TriglavPlugInInt *result, TriglavPlugI
 				pOffscreenService->getRGBChannelIndexProc(&chR, &chG, &chB, destinationOffscreenObject);
 				
 				TriglavPlugInInt	blockRectCount;
-				pOffscreenService->getBlockRectCountProc(&blockRectCount,destinationOffscreenObject,&selectAreaRect);
+				pOffscreenService->getBlockRectCountProc(&blockRectCount, destinationOffscreenObject, &selectAreaRect);
 				
 				std::vector<TriglavPlugInRect>	blockRects;
 				blockRects.resize(blockRectCount);
@@ -110,7 +112,7 @@ void TRIGLAV_PLUGIN_API TriglavPluginCall(TriglavPlugInInt *result, TriglavPlugI
 
 				TriglavPlugInFilterRunSetProgressTotal(pRecordSuite, pluginServer->hostObject, blockRectCount);
 
-				MyFilterInfo *pFilterInfo = static_cast<MyFilterInfo *>(*data);
+				HelloWorldFilterInfo *pFilterInfo = static_cast<HelloWorldFilterInfo *>(*data);
 				pFilterInfo->pPropertyService = pPropertyService;
 
 				bool restart = true;
