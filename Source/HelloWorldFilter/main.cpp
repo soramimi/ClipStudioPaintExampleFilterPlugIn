@@ -206,7 +206,7 @@ void TRIGLAV_PLUGIN_API TriglavPluginCall(TriglavPlugInInt *result, TriglavPlugI
 										if (sA > 0 || S == 0) {
 											uint8_t dY = p[0];
 											uint8_t dA = p[1];
-											S *= sA / 255;
+											S = S * sA / 255;
 											if (dA == 0 || S == 255) {
 												dY = sY;
 												dA = S;
@@ -237,7 +237,7 @@ void TRIGLAV_PLUGIN_API TriglavPluginCall(TriglavPlugInInt *result, TriglavPlugI
 											uint8_t dG = p[chG];
 											uint8_t dB = p[chB];
 											uint8_t dA = p[3];
-											S *= sA / 255;
+											S = S * sA / 255;
 											if (dA == 0 || S == 255) {
 												dR = sR;
 												dG = sG;
