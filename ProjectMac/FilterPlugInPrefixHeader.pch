@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'FilterPlugIn' target in the 'FilterPlugIn' project.
+//
+
+#ifndef FilterPlugInPrefixHeader_pch
+#define FilterPlugInPrefixHeader_pch
+
+#ifdef __OBJC__
+#import <Cocoa/Cocoa.h>
+#endif
+
+#endif /* FilterPlugInPrefixHeader_pch */
