@@ -1,9 +1,5 @@
-TARGET = HelloWorldFilter
 TEMPLATE = lib
-CONFIG -= qt
-
-CPP_STD = c++17
-CONFIG += $$CPP_STD nostrip debug_info static
+TARGET = HelloWorldFilter
 
 
 DESTDIR = $$PWD/_bin
@@ -13,7 +9,7 @@ INCLUDEPATH += ../
 DEFINES += _WINDOWS=1
 
 win32 {
-	install.target = install
+	install.target = .buildfile
 	install.commands = cd $$PWD && install.bat
 	QMAKE_EXTRA_TARGETS += install
 	PRE_TARGETDEPS += install
@@ -28,7 +24,7 @@ win32 {
 SOURCES += \
 	Source/HelloWorldFilter/main.cpp
 
-HEADERS += \
+HEADERS +=
 
 DISTFILES += \
 	install.bat
